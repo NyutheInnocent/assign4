@@ -1,8 +1,8 @@
 package assign4;
 
-import assign4.lexer.Lexer;
 import assign4.parser.Parser;
 import assign4.pretty.PrettyPrinter;
+import lexer.Lexer;
 
 public class Main {
     public static void main(String[] args) {

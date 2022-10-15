@@ -1,3 +1,4 @@
 .idea
-/out/
+out/
 assign4.iml
+.gitignore

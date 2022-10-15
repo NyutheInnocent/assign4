@@ -2,13 +2,17 @@ package assign4.parser;
 
 import assign4.lexer.*;
 import assign4.visitor.*;
+import lexer.Lexer;
+
 import java.io.IOException;
+import java.text.MessageFormat;
 
 public class Parser extends ASTVisitor {
     private Lexer _lexer = null;
     public CompilationUnit cunit;
 
     private Token lookahead = null;
+    private Token peek = null;
 
     public Parser() {
         cunit = new CompilationUnit();
@@ -29,16 +33,10 @@ public class Parser extends ASTVisitor {
     }
 
     public void visit(BlockStatementNode n) {
-
-//        debugger_char_check('{'); // Debugging
         match('{');
 
         createStmt(n);
 
-//        debugger_char_check(';'); // Debugging
-
-
-//        debugger_char_check('}'); // Debugging
         match('}');
     }
     private void createStmt(BlockStatementNode n) {
@@ -46,7 +44,8 @@ public class Parser extends ASTVisitor {
             return;
         }
         n.stmts.add(new AssignmentNode());
-        n.stmts.get(n.stmts.size() - 1).accept(this);
+        AssignmentNode m = n.stmts.get(n.stmts.size() - 1);
+        m.accept(this);
         if (lookahead.tag == ';') {
             match(';');
         }
@@ -60,7 +59,7 @@ public class Parser extends ASTVisitor {
         move(); // Read operator and do nothing
 
         // TODO: Need to check for binary node or identifier
-        if (lookahead.tag == ';') {
+        if (peek.tag == ';') {
             n.set_idRight(new IdentifierNode());
             n.get_idRight().accept(this);
         } else {
@@ -92,17 +91,9 @@ public class Parser extends ASTVisitor {
     void move() {
         try {
             lookahead = _lexer.scan();
+            peek = _lexer.scan();
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    Token peek() {
-        try {
-            return _lexer.scan();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
         }
     }
 
@@ -115,7 +106,7 @@ public class Parser extends ASTVisitor {
             if (lookahead.tag == t) {
                 move();
             } else {
-                throw new Error("Syntax Error");
+                throw new Error(MessageFormat.format("Syntax Error: t: {0} lookahead: {1}", (char)t, (char)lookahead.tag));
             }
         } catch (Error ex) {
             ex.printStackTrace();
@@ -125,7 +116,7 @@ public class Parser extends ASTVisitor {
     ///////////////////////
     // Debugging Methods //
     ///////////////////////
-    private void debugger_char_check(char c) {
-        if (lookahead.tag == c) System.out.println("matched with '" + c + "' : " + lookahead.tag);
-    }
+    // private void debugger_char_check(char c) {
+    //     if (lookahead.tag == c) System.out.println("matched with '" + c + "' : " + lookahead.tag);
+    // }
 }

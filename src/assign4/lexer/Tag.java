@@ -10,5 +10,6 @@ public class Tag {
     public final static int MULTIPLE = 262;
     public final static int DIVIDE = 263;
     public final static int MODULUS = 264;
+    public final static int OPERATOR = ADD | SUB | MULTIPLE | DIVIDE | MODULUS;
 }
 

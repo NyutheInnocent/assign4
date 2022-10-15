@@ -1,4 +1,4 @@
-package assign4.lexer;
+package lexer;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -11,6 +11,8 @@ import java.util.Hashtable;
 public class Lexer {
     public int line = 1;
     private char peek = ' ';
+    private char next = ' ';
+    private int readLimit = 2;
 
     private FileInputStream in;
     private BufferedInputStream bin;
@@ -59,6 +61,7 @@ public class Lexer {
             words.put(s,w);
             return w;
         }
+        
         if (peek == '+') {
             return new Token(Tag.ADD);
         }
@@ -79,16 +82,24 @@ public class Lexer {
         return t;
     }
 
+    public Token peekNext() throws IOException {
+        return new Token(next);
+    }
+
     public void setupIOStream() {
         try {
-            in = new FileInputStream("src/assign4/input.txt");
+            in = new FileInputStream("src/assign4/assign4/input.txt");
             bin = new BufferedInputStream(in);
         } catch (IOException e) {
             System.out.println(e);
         }
     }
     void readChar() throws IOException {
+        // bin.mark(readLimit);
         peek = (char)bin.read();
+        // next = (char)bin.read();
+        // bin.reset();
+        readLimit += 2;
     }
 }
 
