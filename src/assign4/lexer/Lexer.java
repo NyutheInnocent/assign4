@@ -15,7 +15,7 @@ public class Lexer {
     private FileInputStream in;
     private BufferedInputStream bin;
 
-    private Hashtable words = new Hashtable();
+    private Hashtable<String, Word> words = new Hashtable<String, Word>();
 
     public Lexer() {
         reserve(new Word(Tag.TRUE,"true"));
