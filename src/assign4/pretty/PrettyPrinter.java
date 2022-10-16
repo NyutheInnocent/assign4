@@ -41,13 +41,28 @@ public class PrettyPrinter extends ASTVisitor {
         print(n.get_operator().toString());
 
         // TODO: Need to check for id node or binary node
-        n.get_rightBinary().accept(this);
+        if (n.get_right_id().get_id() != null) {
+            n.get_right_id().accept(this);
+            System.out.println(';');
+        }
+        else if (n.get_right_binary() != null) {
+            n.get_right_binary().accept(this);
+        }
     }
+
+    boolean rightHasBeenRead = false;
     public void visit(BinaryNode n) {
         n.get_left().accept(this);
         Token op = n.get_operator();
         print(op.toString());
-        n.get_right().accept(this);
+
+        if (!rightHasBeenRead && n.get_right_binary() != null) {
+            rightHasBeenRead = true;
+            n.get_right_binary().accept(this);
+            return;
+        }
+
+        n.get_right_id().accept(this);
 
         System.out.println(";");
     }

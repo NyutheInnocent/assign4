@@ -6,6 +6,7 @@ import assign4.visitor.*;
 public class IdentifierNode extends Node {
     private String _id;
     private Word _w;
+    private Num _n;
 
     public IdentifierNode() { }
     public IdentifierNode(Word w) {
@@ -26,6 +27,14 @@ public class IdentifierNode extends Node {
 
     public void set_w(Word _w) {
         this._w = _w;
+    }
+
+    public Num get_n() {
+        return _n;
+    }
+
+    public void set_n(Num n) {
+        this._n = n;
     }
 
     @Override

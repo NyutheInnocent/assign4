@@ -8,14 +8,14 @@ import assign4.visitor.ASTVisitor;
  */
 public class AssignmentNode extends Node{
     private IdentifierNode left = new IdentifierNode();
-    private IdentifierNode idRight = new IdentifierNode();
-    private BinaryNode binaryRight = new BinaryNode();
+    private IdentifierNode right_id = new IdentifierNode();
+    private BinaryNode right_binary = new BinaryNode();
     private Token operator = new Token('=');
 
     public AssignmentNode() { }
     public AssignmentNode(IdentifierNode id, BinaryNode binary, Token operator) {
         this.set_left(id);
-        this.set_rightBinary(binary);
+        this.set_right_binary(binary);
         this.set_operator(operator);
     }
 
@@ -32,12 +32,12 @@ public class AssignmentNode extends Node{
         this.left = left;
     }
 
-    public BinaryNode get_rightBinary() {
-        return binaryRight;
+    public BinaryNode get_right_binary() {
+        return right_binary;
     }
 
-    public void set_rightBinary(BinaryNode right) {
-        this.binaryRight = right;
+    public void set_right_binary(BinaryNode right) {
+        this.right_binary = right;
     }
 
     public Token get_operator() {
@@ -48,11 +48,11 @@ public class AssignmentNode extends Node{
         this.operator = operator;
     }
 
-    public IdentifierNode get_idRight() {
-        return idRight;
+    public IdentifierNode get_right_id() {
+        return right_id;
     }
 
-    public void set_idRight(IdentifierNode idRight) {
-        this.idRight = idRight;
+    public void set_right_id(IdentifierNode idRight) {
+        this.right_id = idRight;
     }
 }

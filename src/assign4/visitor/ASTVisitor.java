@@ -16,11 +16,11 @@ public class ASTVisitor {
     }
     public void visit(AssignmentNode n) {
         n.get_left().accept(this);
-        n.get_rightBinary().accept(this);
+        n.get_right_binary().accept(this);
     }
     public void visit(BinaryNode n) {
         n.get_left().accept(this);
-        n.get_right().accept(this);
+        n.get_right_id().accept(this);
     }
     public void visit(IdentifierNode n) {
         // Leaf node

@@ -47,7 +47,7 @@ public class Parser extends ASTVisitor {
         n.stmts.add(new AssignmentNode());
         AssignmentNode m = n.stmts.get(n.stmts.size() - 1);
         m.accept(this);
-        if (lookahead.tag == ';') {
+        if (lookahead.tag == ';' || lookaheadNext.tag == ';') {
             match(';');
         }
         createStmt(n);
@@ -60,14 +60,13 @@ public class Parser extends ASTVisitor {
         move(); // Read operator and do nothing
 
         // TODO: Need to check for binary node or identifier
-        if (lookaheadNext.tag == ';') {
-            n.set_idRight(new IdentifierNode());
-            n.get_idRight().accept(this);
-        }
-
         if (lookaheadNext.tag == Tag.ADD || lookaheadNext.tag == Tag.SUB) {
-            n.set_rightBinary(new BinaryNode());
-            n.get_rightBinary().accept(this);
+            n.set_right_binary(new BinaryNode());
+            n.get_right_binary().accept(this);
+            //
+        } else {
+            n.set_right_id(new IdentifierNode());
+            n.get_right_id().accept(this);
         }
     }
 
@@ -78,14 +77,25 @@ public class Parser extends ASTVisitor {
         n.set_operator(lookahead);
         move(); // Read operator and do nothing
 
-        n.set_right(new IdentifierNode());
-        n.get_right().accept(this);
+        if (lookaheadNext.tag == Tag.ADD || lookaheadNext.tag == Tag.SUB) {
+            n.set_right_binary(new BinaryNode());
+            n.get_right_binary().accept(this);
+        } else {
+            n.set_right_id(new IdentifierNode());
+            n.get_right_id().accept(this);
+        }
     }
 
     public void visit(IdentifierNode n) {
-        n.set_id(lookahead.toString());
-        n.set_w(new Word(lookahead.tag, lookahead.toString()));
-        match(Tag.ID);
+        if (lookahead.getClass().getSimpleName().equals("Num")) {
+            n.set_id(lookahead.toString());
+            n.set_n((Num) lookahead);
+            match(Tag.NUM);
+        } else {
+            n.set_id(lookahead.toString());
+            n.set_w(new Word(lookahead.tag, lookahead.toString()));
+            match(Tag.ID);
+        }
     }
 
     /////////////////////

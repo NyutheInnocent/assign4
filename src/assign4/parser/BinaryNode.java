@@ -6,7 +6,7 @@ import assign4.visitor.ASTVisitor;
 
 public class BinaryNode extends Node {
     private IdentifierNode left;
-    private IdentifierNode right;
+    private IdentifierNode rightId;
     private BinaryNode rightBinary;
     private Token operator;
 
@@ -16,7 +16,7 @@ public class BinaryNode extends Node {
     }
     BinaryNode(IdentifierNode left, IdentifierNode right, Token operator) {
         this.set_left(left);
-        this.set_right(right);
+        this.set_right_id(right);
         this.set_operator(operator);
     }
 
@@ -33,19 +33,19 @@ public class BinaryNode extends Node {
         this.left = left;
     }
 
-    public IdentifierNode get_right() {
-        return right;
+    public IdentifierNode get_right_id() {
+        return rightId;
     }
 
-    public void set_right(IdentifierNode right) {
-        this.right = right;
+    public void set_right_id(IdentifierNode right) {
+        this.rightId = right;
     }
 
-    public BinaryNode get_rightBinary() {
+    public BinaryNode get_right_binary() {
         return rightBinary;
     }
 
-    public void set_rightBinary(BinaryNode right) {
+    public void set_right_binary(BinaryNode right) {
         this.rightBinary = right;
     }
 

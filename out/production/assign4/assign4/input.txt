@@ -1,6 +1,5 @@
 {
-    sum = a + b;
-    result = input - c;
-    i = result + d;
-    w = j;
+    j = i;
+            sum = a + b - 5;
+        input = 7 -9;
 }
