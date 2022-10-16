@@ -25,7 +25,7 @@ public class PrettyPrinter extends ASTVisitor {
         n.block.accept(this);
     }
     public void visit(BlockStatementNode n) {
-        print("{", true);
+        System.out.println("{");
 
         for (AssignmentNode stmt : n.stmts) {
             _level++;
@@ -33,11 +33,12 @@ public class PrettyPrinter extends ASTVisitor {
             _level--;
         }
 
-        print("}", true);
+        System.out.println("}");
     }
     public void visit(AssignmentNode n) {
+        System.out.print(_indent.repeat(_level));
         n.get_left().accept(this);
-        print(n.get_operator().toString(), false);
+        print(n.get_operator().toString());
 
         // TODO: Need to check for id node or binary node
         n.get_rightBinary().accept(this);
@@ -45,22 +46,22 @@ public class PrettyPrinter extends ASTVisitor {
     public void visit(BinaryNode n) {
         n.get_left().accept(this);
         Token op = n.get_operator();
-        print(op.toString(), false);
+        print(op.toString());
         n.get_right().accept(this);
-        print(";", true);
+
+        System.out.println(";");
     }
     public void visit(IdentifierNode n) {
-        print(n.get_id(), false);
+        print(n.get_id());
         // Leaf node
     }
 
     /**
      * Prints out a number of indents determined by level, an identifier and a character to the console.
      * @param identifier The value of an IdentifierNode.
-     * @param includeNewLine A boolean value that indicates whether to include a new line.
      * @see IdentifierNode
      */
-    private void print(String identifier, boolean includeNewLine) {
-        System.out.print(/*_indent.repeat(_level) +*/ identifier + " " + (includeNewLine ? '\n' : ""));
+    private void print(String identifier) {
+        System.out.print(identifier + " ");
     }
 }

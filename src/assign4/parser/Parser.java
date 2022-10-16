@@ -2,7 +2,7 @@ package assign4.parser;
 
 import assign4.lexer.*;
 import assign4.visitor.*;
-import lexer.Lexer;
+import assign4.lexer.Lexer;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -10,9 +10,10 @@ import java.text.MessageFormat;
 public class Parser extends ASTVisitor {
     private Lexer _lexer = null;
     public CompilationUnit cunit;
+    private int _level = 0;
 
     private Token lookahead = null;
-    private Token peek = null;
+    private Token lookaheadNext = null;
 
     public Parser() {
         cunit = new CompilationUnit();
@@ -59,10 +60,12 @@ public class Parser extends ASTVisitor {
         move(); // Read operator and do nothing
 
         // TODO: Need to check for binary node or identifier
-        if (peek.tag == ';') {
+        if (lookaheadNext.tag == ';') {
             n.set_idRight(new IdentifierNode());
             n.get_idRight().accept(this);
-        } else {
+        }
+
+        if (lookaheadNext.tag == Tag.ADD || lookaheadNext.tag == Tag.SUB) {
             n.set_rightBinary(new BinaryNode());
             n.get_rightBinary().accept(this);
         }
@@ -91,7 +94,7 @@ public class Parser extends ASTVisitor {
     void move() {
         try {
             lookahead = _lexer.scan();
-            peek = _lexer.scan();
+            lookaheadNext = _lexer.get_next();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -106,10 +109,11 @@ public class Parser extends ASTVisitor {
             if (lookahead.tag == t) {
                 move();
             } else {
-                throw new Error(MessageFormat.format("Syntax Error: t: {0} lookahead: {1}", (char)t, (char)lookahead.tag));
+                throw new Error(MessageFormat.format("Syntax Error: t: {0} lookahead: {1}", (char) t, (char) lookahead.tag));
             }
         } catch (Error ex) {
             ex.printStackTrace();
+            System.exit(1);
         }
     }
 

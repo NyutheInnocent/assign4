@@ -1,8 +1,9 @@
-package lexer;
+package assign4.lexer;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PushbackInputStream;
 import java.util.Hashtable;
 
 /**
@@ -14,10 +15,10 @@ public class Lexer {
     private char next = ' ';
     private int readLimit = 2;
 
-    private FileInputStream in;
-    private BufferedInputStream bin;
+    //    private BufferedInputStream bin;
+    private PushbackInputStream pin;
 
-    private Hashtable<String, Word> words = new Hashtable<String, Word>();
+    private Hashtable<String, Word> words = new Hashtable<>();
 
     public Lexer() {
         reserve(new Word(Tag.TRUE,"true"));
@@ -44,15 +45,14 @@ public class Lexer {
             return new Num(v);
         }
         if (Character.isLetter(peek)) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             do {
                 sb.append(peek);
                 readChar();
             } while (Character.isLetterOrDigit(peek));
 
-            // TODO: Bug somewhere in here
             String s = sb.toString();
-            Word w = (Word)words.get(s);
+            Word w = words.get(s);
 
             if (w != null) {
                 return w;
@@ -61,45 +61,34 @@ public class Lexer {
             words.put(s,w);
             return w;
         }
-        
-        if (peek == '+') {
-            return new Token(Tag.ADD);
-        }
-        if (peek == '-') {
-            return new Token(Tag.SUB);
-        }
-        if (peek == '*') {
-            return new Token(Tag.MULTIPLE);
-        }
-        if (peek == '/') {
-            return new Token(Tag.DIVIDE);
-        }
-        if (peek == '%') {
-            return new Token(Tag.MODULUS);
-        }
+
         Token t = new Token(peek);
         peek = ' ';
         return t;
     }
 
-    public Token peekNext() throws IOException {
+    public Token get_next() throws IOException {
         return new Token(next);
     }
 
     public void setupIOStream() {
         try {
-            in = new FileInputStream("src/assign4/assign4/input.txt");
-            bin = new BufferedInputStream(in);
-        } catch (IOException e) {
-            System.out.println(e);
+            FileInputStream in = new FileInputStream("src/assign4/input.txt");
+//            bin = new BufferedInputStream(in);
+            pin = new PushbackInputStream(in);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
     void readChar() throws IOException {
         // bin.mark(readLimit);
-        peek = (char)bin.read();
-        // next = (char)bin.read();
-        // bin.reset();
-        readLimit += 2;
+        peek = (char) pin.read();
+        int temp = pin.read();
+        if (temp == -1) {
+            return;
+        }
+        next = (char) temp;
+        pin.unread(temp);
     }
 }
 
